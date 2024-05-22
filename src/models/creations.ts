@@ -11,11 +11,13 @@ interface ICreation {
     categories:string[];
     author:IAuthor;
     publicationDate:Date;
+    prompt:string;
 }
 
 const creationSchema = new Schema<ICreation>({
     imgUri: { type: String, required: true, lowercase: true, trim: true},
     title: { type: String, required: true },
+    prompt:{ type: String, required: true },
     categories:{type:[String]},
     author:{
         lastName : { type: String, lowercase: true, trim: true },
