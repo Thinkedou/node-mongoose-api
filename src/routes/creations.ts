@@ -23,9 +23,29 @@ api.post('/',async (c)=>{
         return c.json(error._message,400)
     }
 })
-api.put('/',(c)=>{
-    return c.json({msg:"PUT /creations"})
+api.put('/:creaId', async (c)=>{
+    const _id = c.req.param('creaId')
+    const body = await c.req.json()
+    const q = {
+        _id
+    }
+    const update = {
+        $set:{
+            ...body
+        }
+    }
+    try {
+        const tryToUpdate = await Creation.findOneAndUpdate(q,update,{new: true})
+
+        return c.json(tryToUpdate, 200)
+    } catch (error: unknown) {
+        return c.json(error._message,400)
+    }
 })
+
+// patch ? 
+
+
 api.delete('/',(c)=>{
     return c.json({msg:"DELETE /creations"})
 })
