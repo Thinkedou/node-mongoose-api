@@ -6,6 +6,13 @@ api.get('/', async (c)=>{
     const allCrea = await Creation.find({})
     return c.json(allCrea)
 })
+
+api.get('/:creaId', async (c)=>{
+    const _id = c.req.param('creaId')
+    const oneCrea = await Creation.findOne({_id})
+    return c.json(oneCrea)
+})
+
 api.post('/',async (c)=>{
     const body = await c.req.json()
     try {
