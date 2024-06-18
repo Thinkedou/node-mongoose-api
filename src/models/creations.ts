@@ -28,4 +28,4 @@ const creationSchema = new Schema<ICreation>({
 });
 
 const Creation = model<ICreation>('creations', creationSchema);
-export {Creation}
+export {Creation,ICreation}
