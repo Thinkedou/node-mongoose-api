@@ -19,13 +19,31 @@ api.post('/',async (c)=>{
         const newCrea  = new Creation(body)
         const saveCrea = await newCrea.save()
         return c.json(saveCrea, 201)
-    } catch (error) {
+    } catch (error:unknown) {
         return c.json(error._message,400)
     }
 })
-api.put('/',(c)=>{
-    return c.json({msg:"PUT /creations"})
+api.put('/:creaId',async (c)=>{
+    const _id  = c.req.param('creaId')
+    const body = await c.req.json()
+    
+    // on attrape l'id de la creations (_id)
+    // on a besoin du body pour les champs à mettre à jour
+    // on peut préparer notre query pour findOneAndUpdate 
+    const q = {
+        _id:_id
+    }
+    const updateQuery = {
+        categories:body.categories,
+        title:body.title
+    }
+    const tryToUpdate = await Creation.findOneAndUpdate(q,updateQuery,{new:true})
+    return c.json(tryToUpdate,200)
+
 })
+
+
+
 api.delete('/',(c)=>{
     return c.json({msg:"DELETE /creations"})
 })
