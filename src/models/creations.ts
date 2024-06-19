@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model,Types } from 'mongoose';
 
 interface IAuthor{
     lastName:string;
@@ -9,6 +9,7 @@ interface ICreation {
     title: string;
     isValidated?: boolean;
     categories:string[];
+    comments:Types.ObjectId[];
     author:IAuthor;
     publicationDate:Date;
     prompt:string;
@@ -19,6 +20,7 @@ const creationSchema = new Schema<ICreation>({
     title: { type: String, required: true },
     prompt:{ type: String, required: true },
     categories:{type:[String]},
+    comments:[{ type:Types.ObjectId, ref: 'comments' }],
     author:{
         lastName : { type: String, lowercase: true, trim: true },
         firstName:{ type: String, lowercase: true, trim: true }

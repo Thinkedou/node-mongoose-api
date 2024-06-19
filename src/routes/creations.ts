@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import {Creation} from '../models/creations'
+import {Comment} from '../models/comments'
 import { isValidObjectId } from 'mongoose'
 
 const api = new Hono().basePath('/creations')
@@ -16,9 +17,7 @@ api.get('/:creaId', async (c)=>{
         const oneCrea = await Creation.findOne({_id})
         return c.json(oneCrea)
     }
-
     return c.json({msg:'ObjectId malformed'},400)
-
 })
 
 // en head, la req http n'a pas de body response!!
@@ -40,6 +39,30 @@ api.post('/',async (c)=>{
         return c.json(error._message,400)
     }
 })
+
+api.post('/:creaId/comments',async (c)=>{
+    // on attrape le body qui sera le commentaire
+    // on crée le commentaire dans la collection comments
+    // on push l'_id dans creations
+    const creaId  = c.req.param('creaId')
+    const body = await c.req.json()
+
+    const newComment  = new Comment(body)
+    const saveComment = await newComment.save()
+    const {_id} = saveComment
+    const q = {
+        _id:creaId
+    }
+    const updateQuery = {
+        $addToSet:{
+            comments:_id
+        }
+    }
+    const tryToUpdate = await Creation.findOneAndUpdate(q,updateQuery,{new:true})
+    return c.json(tryToUpdate)  
+})
+
+
 // en put, on écrase toutes les valeurs (y compris les tableaux)
 api.put('/:creaId',async (c)=>{
     const _id  = c.req.param('creaId')
