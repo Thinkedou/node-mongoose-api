@@ -1,5 +1,7 @@
 import { Hono } from 'hono'
 import {Creation} from '../models/creations'
+import { isValidObjectId } from 'mongoose'
+
 const api = new Hono().basePath('/creations')
 
 api.get('/', async (c)=>{
@@ -9,9 +11,14 @@ api.get('/', async (c)=>{
 
 api.get('/:creaId', async (c)=>{
     const _id = c.req.param('creaId')
-    const oneCrea = await Creation.findOne({_id})
-    return c.json(oneCrea)
-    
+
+    if(isValidObjectId(_id)){
+        const oneCrea = await Creation.findOne({_id})
+        return c.json(oneCrea)
+    }
+
+    return c.json({msg:'ObjectId malformed'},400)
+
 })
 
 // en head, la req http n'a pas de body response!!
