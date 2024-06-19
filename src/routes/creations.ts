@@ -11,7 +11,17 @@ api.get('/:creaId', async (c)=>{
     const _id = c.req.param('creaId')
     const oneCrea = await Creation.findOne({_id})
     return c.json(oneCrea)
+    
 })
+
+// en head, la req http n'a pas de body response!!
+// mais on peut setter des headers à la volée et autant que nécessaire
+// c.setHeaders('x-count',1651)
+
+// api.head('/', async (c)=>{
+    
+    
+// })
 
 api.post('/',async (c)=>{
     const body = await c.req.json()
@@ -65,9 +75,15 @@ api.patch('/:creaId',async (c)=>{
 
 })
 
-
-api.delete('/',(c)=>{
-    return c.json({msg:"DELETE /creations"})
+api.delete('/:creaId',async (c)=>{
+    const _id  = c.req.param('creaId')
+    const tryToDelete = await Creation.deleteOne({_id})
+    const {deletedCount} = tryToDelete
+    if(deletedCount){
+        return c.json({msg:"DELETE done"})
+    }
+    return c.json({msg:"not found"},404)
+    
 })
 
 export default api
