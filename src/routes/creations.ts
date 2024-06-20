@@ -2,10 +2,14 @@ import { Hono } from 'hono'
 import {Creation} from '../models/creations'
 import {Comment} from '../models/comments'
 import { isValidObjectId } from 'mongoose'
-
+import { guard } from '../middlewares/auth'
 const api = new Hono().basePath('/creations')
 
-api.get('/', async (c)=>{
+
+
+
+
+api.get('/',guard, async (c)=>{
     // find mongoose attend trois object param 
     // query 
     // projection
