@@ -6,7 +6,18 @@ import { isValidObjectId } from 'mongoose'
 const api = new Hono().basePath('/creations')
 
 api.get('/', async (c)=>{
-    const allCrea = await Creation.find({})
+    // find mongoose attend trois object param 
+    // query 
+    // projection
+    // options
+    const allCrea = await Creation.find(
+        {}, // query
+        {}, // projection
+        {
+            populate:'comments'
+        }
+    )
+
     return c.json(allCrea)
 })
 
