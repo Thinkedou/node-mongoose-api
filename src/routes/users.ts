@@ -5,7 +5,14 @@ import { isValidObjectId } from 'mongoose'
 
 const api = new Hono().basePath('/users')
 
-
+api.get('/',async (c)=>{
+    try {
+        const allUsers = await User.find({})
+        return c.json(allUsers)
+    } catch (error:unknown) {
+        return c.json(error._message,400)
+    }
+})
 
 
 api.post('/register',async (c)=>{

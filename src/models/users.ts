@@ -13,16 +13,19 @@ const userSchema = new Schema<IUser>({
     firstName: { type: String },
     lastName:{ type: String },
     email:{ type: String, required: true, lowercase: true, trim: true },
-    password:{ type: String, required: true },    
-    salt    :{ type: String },
+    password:{ type: String, required: true, select: false},    
+    salt    :{ type: String , select: false},
     creationDate:{type:Date, default: Date.now},
 });
 
+// save(body) > déclencher le middleware > ensuite le "vrai" save
 
+// mongoose middleware 
 userSchema.pre('save', function(): void {
 
     const salt    = randomBytes(32).toString('hex')
     const genHash = pbkdf2Sync(this.password, salt, 10000, 64, 'sha512').toString('hex')
+    
     this.password = genHash
     this.salt     = salt
 

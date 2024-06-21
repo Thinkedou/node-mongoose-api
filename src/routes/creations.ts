@@ -14,6 +14,8 @@ api.get('/',guard, async (c)=>{
     // query 
     // projection
     // options
+    
+    // creations?sort=creationDate&populate=comments
     const allCrea = await Creation.find(
         {}, // query
         {}, // projection
